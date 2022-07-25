@@ -9,6 +9,12 @@
 # You can define helper functions, run commands, or specify environment variables
 # NOTE: any variables defined that are not environment variables will get reset after the first execution
 
+# import statements
+Import-Module Az.Accounts -RequiredVersion '2.*'
+Import-Module Az.Compute -RequiredVersion '4.*'
+Import-Module Az.Storage -RequiredVersion '4.*'
+
+
 # Authenticate with Azure PowerShell using MSI.
 # Remove this if you are not planning on using MSI or Azure PowerShell.
 if ($env:MSI_SECRET) {

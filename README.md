@@ -122,7 +122,7 @@ func new --name egExample --template "Azure Event Grid trigger"
 When you done with your code changes, you can publish your code with the following command
 
 ```
-func azure functionapp publish FirstFunctionProj
+func azure functionapp publish FirstFunctionProj --powershell
 ```
 
 #### Trace your function for execution
@@ -147,10 +147,16 @@ az eventgrid event-subscription create --name fn-invoke-1 \
 
 ### Create VM
 
+az vm create -g $resourceGroup -n autosyslinuxvm --image "UbuntuLTS" --admin-username "azureuser" --generate-ssh-keys
+
 ### Enable a port, if needed
+
+az vm open-port -g $resourceGroup -n autosyslinuxvm --port 80
 
 ### Invoke a script from Azure function
 
+az vm run-command invoke -g $resourceGroup -n $vm --command-id RunShellScript --scripts "{(apt-get update && apt-get install -y nginx) & } 2>/dev/null"
+
 ## Next
 
-What if we want to do the same functionality on a VM that is in a specific VNET, stay tuned
+What if we want to do the same functionality on a VM that is in a specific VNET? Stay tuned!!

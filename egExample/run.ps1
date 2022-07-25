@@ -1,3 +1,4 @@
+
 param($eventGridEvent, $TriggerMetadata)
 
 # Make sure to pass hashtables to Out-String so they're logged correctly
@@ -12,3 +13,6 @@ $fileType = $eventGridEvent.data.contentType
 Write-Information "A file change operation happened in $topic"
 Write-Host "A file change operation happened in $topic"
 Write-Host "$api was invoked on $file of type $fileType"
+Write-Host "START execution of script in remote host"
+Invoke-AzVMRunCommand -ResourceGroupName 'autosys100-rg' -Name 'autosyslinuxvm' -CommandId 'RunShellScript' -ScriptPath 'install_nginx.sh'
+Write-Host "COMPLETED execution of script on remote host"
