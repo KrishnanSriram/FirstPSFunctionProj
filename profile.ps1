@@ -10,9 +10,9 @@
 # NOTE: any variables defined that are not environment variables will get reset after the first execution
 
 # import statements
-Import-Module Az.Accounts -RequiredVersion '2.9.0'
-Import-Module Az.Compute -RequiredVersion '4.30.0'
-Import-Module Az.Storage -RequiredVersion '4.7.0'
+Import-Module Az.Accounts
+Import-Module Az.Compute
+Import-Module Az.Storage
 
 
 # Authenticate with Azure PowerShell using MSI.
