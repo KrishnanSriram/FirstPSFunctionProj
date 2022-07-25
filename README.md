@@ -142,3 +142,15 @@ az eventgrid event-subscription create --name fn-invoke-1 \
  --source-resource-id /subscriptions/b1a250e2-b191-45ee-adf8-40d1c9d99dbd/resourceGroups/autosys100-rg/providers/Microsoft.Storage/storageAccounts/autosys100sa \
  --endpoint /subscriptions/b1a250e2-b191-45ee-adf8-40d1c9d99dbd/resourceGroups/autosys100-rg/providers/Microsoft.Web/sites/FirstFunctionProj/functions/egExample --endpoint-type azurefunction
 ```
+
+## Execute a script in VM
+
+### Create VM
+
+### Enable a port, if needed
+
+### Invoke a script from Azure function
+
+## Next
+
+What if we want to do the same functionality on a VM that is in a specific VNET, stay tuned

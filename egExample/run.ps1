@@ -7,6 +7,8 @@ $topic = $eventGridEvent.topic
 $api = $eventGridEvent.data.api
 $file = $eventGridEvent.data.url
 $fileType = $eventGridEvent.data.contentType
+# check for container name and file type and invoke appropriate
+# operation in VM
 Write-Information "A file change operation happened in $topic"
 Write-Host "A file change operation happened in $topic"
 Write-Host "$api was invoked on $file of type $fileType"
