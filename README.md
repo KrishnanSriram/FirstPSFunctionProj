@@ -14,6 +14,7 @@ export resourceGroup=autosys100-rg
 export location="eastus"
 export storageAccount=autosys100sa
 export storageContainer=autosys100container
+export subscription=b1a250e2-akjnasd-asdfknjasd
 az group create --name $resourceGroup --location $location
 ```
 
@@ -66,7 +67,6 @@ az storage blob delete --container-name $storageContainer --name sample.txt
 #### Create function app
 
 ```
-export subscription=b1a250e2-akjnasd-asdfknjasd
 az account set -s $subscription
 
 export tag="create-function-app-connect-to-storage-account"
@@ -139,8 +139,8 @@ It's very important to connect event grid with azure function, the following com
 
 ```
 az eventgrid event-subscription create --name fn-invoke-1 \
- --source-resource-id /subscriptions/b1a250e2-b191-45ee-adf8-40d1c9d99dbd/resourceGroups/autosys100-rg/providers/Microsoft.Storage/storageAccounts/autosys100sa \
- --endpoint /subscriptions/b1a250e2-b191-45ee-adf8-40d1c9d99dbd/resourceGroups/autosys100-rg/providers/Microsoft.Web/sites/FirstFunctionProj/functions/egExample --endpoint-type azurefunction
+ --source-resource-id /subscriptions/$subscription/resourceGroups/autosys100-rg/providers/Microsoft.Storage/storageAccounts/autosys100sa \
+ --endpoint /subscriptions/$subscription/resourceGroups/autosys100-rg/providers/Microsoft.Web/sites/FirstFunctionProj/functions/egExample --endpoint-type azurefunction
 ```
 
 ## Execute a script in VM
