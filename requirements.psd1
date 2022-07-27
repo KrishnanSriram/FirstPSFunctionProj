@@ -4,8 +4,8 @@
 @{
     # For latest supported version, go to 'https://www.powershellgallery.com/packages/Az'. 
     # To use the Az module in your function app, please uncomment the line below.
-    Az = '8.*'
-    Accounts = '2.*'
-    Compute = '4.*'
-    Storage = '4.*'
+    # Az = '8.*'
+    'Az.Accounts' = '2.*'
+    'Az.Compute' = '4.*'
+    # 'Az.Storage' = '4.*'
 }

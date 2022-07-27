@@ -147,15 +147,33 @@ az eventgrid event-subscription create --name fn-invoke-1 \
 
 ### Create VM
 
+```
 az vm create -g $resourceGroup -n autosyslinuxvm --image "UbuntuLTS" --admin-username "azureuser" --generate-ssh-keys
+```
+
+When VM is ready, we need RBAC on azure function to execute scripts on VM. You can do that with the following command
+
+```
+az role assignment create --assignee-object-id "73f6e3c4-59ed-4e26-a24a-233d0446d1f6" --role "Virtual Machine Contributor" --scope "/subscriptions/$subscription/resourceGroups/$resourceGroup"
+```
+
+assignee-object-id is the pirincipal ID of azure function
 
 ### Enable a port, if needed
 
+If we need to run a web application in VM, we may need to open up a port
+
+```
 az vm open-port -g $resourceGroup -n autosyslinuxvm --port 80
+```
 
 ### Invoke a script from Azure function
 
+If you want to run a script in VM
+
+```
 az vm run-command invoke -g $resourceGroup -n $vm --command-id RunShellScript --scripts "{(apt-get update && apt-get install -y nginx) & } 2>/dev/null"
+```
 
 ## Next
 

@@ -14,5 +14,5 @@ Write-Information "A file change operation happened in $topic"
 Write-Host "A file change operation happened in $topic"
 Write-Host "$api was invoked on $file of type $fileType"
 Write-Host "START execution of script in remote host"
-Invoke-AzVMRunCommand -ResourceGroupName 'autosys100-rg' -Name 'autosyslinuxvm' -CommandId 'RunShellScript' -ScriptPath 'install_nginx.sh'
+Invoke-AzVMRunCommand -ResourceGroupName 'autosys100-rg' -Name 'autosyslinuxvm' -CommandId 'RunShellScript' -ScriptPath '.\install.bash'
 Write-Host "COMPLETED execution of script on remote host"
