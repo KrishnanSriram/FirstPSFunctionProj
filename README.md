@@ -52,16 +52,15 @@ Head over to visit website for events - https://autosys100saConnection.azurewebs
 
 ```
 export AZURE_STORAGE_KEY="$(az storage account keys list --account-name $storageAccount --resource-group $resourceGroup --query "[0].value" --output tsv)"
-
-az storage container create --name $storageContainer
+az storage container create --name $storageContainer --account-name $storageAccount
 ```
 
 #### try upload/delete files and track events in HTTP endpoint
 
 ```
 touch sample.txt
-az storage blob upload --file sample.txt --container-name $storageContainer --name sample.txt
-az storage blob delete --container-name $storageContainer --name sample.txt
+az storage blob upload --file sample.txt --container-name $storageContainer --account-name $storageAccount --name sample.txt 
+az storage blob delete --container-name $storageContainer --account-name $storageAccount --name sample.txt
 ```
 
 #### Create function app
@@ -77,7 +76,10 @@ export functionsVersion="4"
 
 az storage account create --name $storage --location "$location" --resource-group $resourceGroup --sku $skuStorage
 
-az functionapp create --name $functionApp --resource-group $resourceGroup --storage-account $storage --consumption-plan-location "$location" --functions-version $functionsVersion
+az functionapp create --name $functionApp --resource-group $resourceGroup --storage-account $storage --consumption-plan-location "$location"  --runtime powershell --functions-version $functionsVersion --assign-identity
+
+# to set funcation app platform to 64-bit
+az functionapp config set --use-32bit-worker-process false --name $functionApp --resource-group $resourceGroup
 ```
 
 #### Get the storage account connection string.
@@ -122,7 +124,7 @@ func new --name egExample --template "Azure Event Grid trigger"
 When you done with your code changes, you can publish your code with the following command
 
 ```
-func azure functionapp publish FirstFunctionProj --powershell
+func azure functionapp publish $functionApp --powershell
 ```
 
 #### Trace your function for execution
@@ -130,7 +132,7 @@ func azure functionapp publish FirstFunctionProj --powershell
 After we successfully publish the function we can trace the execution of function with the following command
 
 ```
-func azure functionapp logstream FirstFunctionProj
+func azure functionapp logstream $functionApp
 ```
 
 #### Associate your function with eventgrid a.k.a event subscription to function
@@ -140,7 +142,7 @@ It's very important to connect event grid with azure function, the following com
 ```
 az eventgrid event-subscription create --name fn-invoke-1 \
  --source-resource-id /subscriptions/$subscription/resourceGroups/autosys100-rg/providers/Microsoft.Storage/storageAccounts/autosys100sa \
- --endpoint /subscriptions/$subscription/resourceGroups/autosys100-rg/providers/Microsoft.Web/sites/FirstFunctionProj/functions/egExample --endpoint-type azurefunction
+ --endpoint /subscriptions/$subscription/resourceGroups/autosys100-rg/providers/Microsoft.Web/sites/$functionApp/functions/egExample --endpoint-type azurefunction
 ```
 
 ## Execute a script in VM
@@ -154,10 +156,10 @@ az vm create -g $resourceGroup -n autosyslinuxvm --image "UbuntuLTS" --admin-use
 When VM is ready, we need RBAC on azure function to execute scripts on VM. You can do that with the following command
 
 ```
-az role assignment create --assignee-object-id "73f6e3c4-59ed-4e26-a24a-233d0446d1f6" --role "Virtual Machine Contributor" --scope "/subscriptions/$subscription/resourceGroups/$resourceGroup"
-```
+export functionappPrincipalId="$(az functionapp identity show -g $resourceGroup -n $functionApp --query "principalId" --output tsv)"
 
-assignee-object-id is the pirincipal ID of azure function
+az role assignment create --assignee-object-id $functionappPrincipalId --role "Virtual Machine Contributor" --scope "/subscriptions/$subscription/resourceGroups/$resourceGroup"
+```
 
 ### Enable a port, if needed
 
@@ -172,7 +174,7 @@ az vm open-port -g $resourceGroup -n autosyslinuxvm --port 80
 If you want to run a script in VM
 
 ```
-az vm run-command invoke -g $resourceGroup -n $vm --command-id RunShellScript --scripts "{(apt-get update && apt-get install -y nginx) & } 2>/dev/null"
+az vm run-command invoke -g $resourceGroup -n autosyslinuxvm --command-id RunShellScript --scripts "{(apt-get update && apt-get install -y nginx) & } 2>/dev/null"
 ```
 
 ## Next
